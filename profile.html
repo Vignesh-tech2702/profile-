@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vigneshkumar | AI-Based Cyber Attack Detection for Banking Networks | B.E. CSE 2026</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#0f172a',
+            },
+            bfsi: {
+              blue: '#0B2545',
+              accent: '#134074',
+              teal: '#8DA9C4',
+              ice: '#EEF4F8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="custom.css" />
+</head>
+<body class="bg-slate-50 text-slate-900 cyber-grid-bg min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-auto"></div>
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-blue-900 text-white text-xs font-medium py-2 px-4 text-center tracking-wide border-b border-blue-800">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-800 text-blue-200 text-[11px] font-mono font-semibold">
+        FINAL YEAR ENGINEERING PROJECT
+      </span>
+      <span>B.E. Computer Science & Engineering · Class of 2026 · Kamaraj College of Engineering & Technology</span>
+      <a href="#simulator" class="underline underline-offset-2 text-blue-200 hover:text-white font-semibold ml-2">
+        Test Live AI Detection &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      <!-- Logo / Name -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold font-mono text-base shadow-md shadow-blue-200 group-hover:bg-blue-800 transition-colors">
+          VK
+        </div>
+        <div>
+          <div class="font-bold text-slate-900 text-base leading-tight group-hover:text-blue-700 transition-colors">
+            Vigneshkumar
+          </div>
+          <div class="text-xs text-blue-700 font-medium">
+            B.E. CSE · Cybersecurity & AI
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
+        <a href="#overview" class="hover:text-blue-700 transition-colors">Overview</a>
+        <a href="#credentials" class="hover:text-blue-700 transition-colors">Education</a>
+        <a href="#disciplines" class="hover:text-blue-700 transition-colors">Where I Work</a>
+        <a href="#featured-project" class="hover:text-blue-700 transition-colors">Featured Project</a>
+        <a href="#simulator" class="hover:text-blue-700 transition-colors flex items-center gap-1.5 text-blue-700 font-bold">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          Live AI Simulator
+        </a>
+        <a href="#contact" class="hover:text-blue-700 transition-colors">Contact</a>
+      </nav>
+
+      <!-- Header CTAs -->
+      <div class="hidden md:flex items-center gap-3">
+        <button class="btn-copy-email inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:border-blue-300 transition-all shadow-sm">
+          <i data-lucide="copy" class="w-3.5 h-3.5 text-blue-600"></i>
+          divignesh.tech@gmail.com
+        </button>
+        <a href="#contact" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-700 hover:bg-blue-800 transition-all shadow-md shadow-blue-200">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          Get in touch
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-blue-700 hover:bg-slate-100" aria-label="Toggle navigation">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobile-menu-dropdown" class="hidden md:hidden px-4 pt-2 pb-5 bg-white border-b border-slate-200 shadow-lg space-y-3">
+      <a href="#overview" class="block py-2 text-sm font-semibold text-slate-700 hover:text-blue-700">Overview</a>
+      <a href="#credentials" class="block py-2 text-sm font-semibold text-slate-700 hover:text-blue-700">Education & Credentials</a>
+      <a href="#disciplines" class="block py-2 text-sm font-semibold text-slate-700 hover:text-blue-700">Where I Work</a>
+      <a href="#featured-project" class="block py-2 text-sm font-semibold text-slate-700 hover:text-blue-700">Featured Project</a>
+      <a href="#simulator" class="block py-2 text-sm font-bold text-blue-700">Live AI Detection Simulator</a>
+      <a href="#contact" class="block py-2 text-sm font-semibold text-slate-700 hover:text-blue-700">Get in Touch</a>
+      <div class="pt-2 border-t border-slate-100 flex flex-col gap-2">
+        <button class="btn-copy-email w-full py-2 px-3 text-xs font-semibold text-slate-700 bg-slate-100 rounded-lg text-center">
+          Copy Email (divignesh.tech@gmail.com)
+        </button>
+        <a href="#contact" class="w-full py-2.5 px-4 text-xs font-semibold text-white bg-blue-700 rounded-lg text-center">
+          Get in touch
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="overview" class="relative pt-12 pb-20 overflow-hidden hero-radial-glow border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Eyebrow Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-semibold tracking-wider uppercase">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            FINAL YEAR ENGINEERING PROJECT — CSE
+          </div>
+
+          <!-- Main Headline -->
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+            Building defences for the networks <span class="text-blue-700 underline decoration-blue-300 underline-offset-4">banks can't afford to lose.</span>
+          </h1>
+
+          <!-- Intro Paragraph -->
+          <p class="text-lg sm:text-xl text-slate-600 leading-relaxed font-normal">
+            I'm <strong class="font-semibold text-slate-900">Vigneshkumar</strong>, a Computer Science & Engineering student at <span class="text-blue-900 font-medium">Kamaraj College of Engineering & Technology</span>, working at the intersection of <span class="text-blue-700 font-semibold">cybersecurity</span> and <span class="text-blue-700 font-semibold">applied machine learning</span> for the BFSI sector.
+          </p>
+
+          <!-- Dual CTAs -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#featured-project" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-blue-700 hover:bg-blue-800 transition-all shadow-lg shadow-blue-200 hover:shadow-xl hover:-translate-y-0.5">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              View the project
+            </a>
+            
+            <a href="#contact" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-slate-700 bg-white border border-slate-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all shadow-sm">
+              <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+              Get in touch
+            </a>
+
+            <a href="#simulator" class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold text-blue-800 bg-blue-100/70 hover:bg-blue-100 border border-blue-200 transition-all">
+              <i data-lucide="play-circle" class="w-4 h-4 text-blue-700"></i>
+              Launch Simulator
+            </a>
+          </div>
+
+          <!-- Quick Badges Bar -->
+          <div class="pt-6 border-t border-slate-200/80 flex flex-wrap items-center gap-4 text-xs font-medium text-slate-600">
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white border border-slate-200 shadow-sm">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-blue-600"></i>
+              <span>B.E. CSE · Class of 2026</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white border border-slate-200 shadow-sm">
+              <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+              <span>Virudhunagar, Tamil Nadu</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Open to R&D & Engineering Roles</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Portrait & Key Card -->
+        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+          <div class="relative w-full max-w-sm sm:max-w-md">
+            
+            <!-- Glow effect behind photo -->
+            <div class="absolute -inset-4 bg-gradient-to-tr from-blue-600/20 to-sky-400/20 rounded-3xl blur-xl -z-10"></div>
+
+            <!-- Main Frame Card -->
+            <div class="white-card p-4 border-2 border-white shadow-xl bg-white/95">
+              
+              <!-- Image Container -->
+              <div class="profile-frame aspect-[4/4.6] bg-slate-100 overflow-hidden relative">
+                <img 
+                  src="file:///C:/Users/ADMIN/.gemini/antigravity/brain/a8ad1032-adeb-4fee-9b67-9e2eeda3e48a/.user_uploaded/media_1789061165473.jpg"
+                  onerror="this.onerror=null; this.src='profile.jpg';"
+                  alt="Vigneshkumar - Computer Science & Engineering Student"
+                  class="w-full h-full object-cover object-top hover:scale-102 transition-transform duration-500"
+                />
+
+                <!-- Overlay Badge on Image -->
+                <div class="absolute bottom-3 left-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-white/20 text-white shadow-lg">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-xs font-semibold text-blue-300">Undergraduate Researcher</div>
+                      <div class="text-sm font-bold text-white">Vigneshkumar</div>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-600 text-white">
+                      B.E. 2026
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Summary Under Photo -->
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+                <div class="flex items-center gap-1.5">
+                  <i data-lucide="award" class="w-4 h-4 text-blue-600"></i>
+                  <span>Kamaraj College of Engg & Tech</span>
+                </div>
+                <button class="btn-copy-email text-blue-700 hover:text-blue-900 font-semibold flex items-center gap-1">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Email
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Academic Background & Credentials Grid -->
+  <section id="credentials" class="py-16 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="mb-10 text-center sm:text-left">
+        <span class="text-xs font-bold font-mono tracking-widest text-blue-700 uppercase">ACADEMIC PROFILE</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
+          Institution & Degree Credentials
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- DEGREE -->
+        <div class="white-card p-6 border-slate-200 bg-slate-50/50">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">DEGREE</div>
+          <div class="text-lg font-bold text-slate-900 mt-1">Bachelor of Engineering</div>
+          <div class="text-xs font-semibold text-blue-700 mt-1">B.E. · Class of 2026</div>
+        </div>
+
+        <!-- BRANCH -->
+        <div class="white-card p-6 border-slate-200 bg-slate-50/50">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+            <i data-lucide="binary" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">BRANCH</div>
+          <div class="text-lg font-bold text-slate-900 mt-1">Computer Science & Engg</div>
+          <div class="text-xs font-semibold text-slate-600 mt-1">Department of CSE</div>
+        </div>
+
+        <!-- INSTITUTION -->
+        <div class="white-card p-6 border-slate-200 bg-slate-50/50">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+            <i data-lucide="building" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">INSTITUTION</div>
+          <div class="text-lg font-bold text-slate-900 mt-1">Kamaraj College of Engg</div>
+          <div class="text-xs font-semibold text-slate-600 mt-1">& Technology (Autonomous)</div>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="white-card p-6 border-slate-200 bg-slate-50/50">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">LOCATION</div>
+          <div class="text-lg font-bold text-slate-900 mt-1">Virudhunagar</div>
+          <div class="text-xs font-semibold text-slate-600 mt-1">Tamil Nadu, India</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Where I Work: 3 Core Disciplines (01, 02, 03) -->
+  <section id="disciplines" class="py-20 bg-slate-50/60 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-14">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold font-mono uppercase mb-3">
+          RESEARCH SCOPE
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Where I work
+        </h2>
+        <p class="text-base sm:text-lg text-slate-600 mt-3 leading-relaxed">
+          My final-year project sits across three overlapping disciplines, each applied specifically to problems banks and financial institutions face on their networks.
+        </p>
+      </div>
+
+      <!-- 3 Overlapping Disciplines Cards Container (rendered by app.js) -->
+      <div id="disciplines-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Dynamic JS Injection Fallback -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Featured Project Deep Dive Section -->
+  <section id="featured-project" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-xs font-bold font-mono tracking-widest text-blue-700 uppercase">FEATURED PROJECT</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">
+            AI-Based Cyber Attack Detection System for Banking Networks
+          </h2>
+          <p class="text-slate-600 text-base sm:text-lg max-w-3xl mt-3">
+            A machine-learning driven detection pipeline that monitors banking network traffic in real time, flags anomalous behaviour, and classifies attacks before they reach core systems.
+          </p>
+        </div>
+
+        <!-- Tags / Pills -->
+        <div class="flex flex-wrap gap-2 lg:max-w-md lg:justify-end">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            Intrusion Detection
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            Network Traffic Analysis
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            Anomaly Detection
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+            BFSI Security
+          </span>
+        </div>
+      </div>
+
+      <!-- Core Pillars Callout Cards (BFSI & AI/ML) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        
+        <!-- BFSI Pillar -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-900 to-slate-900 text-white shadow-xl relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-600/20 rounded-full blur-2xl"></div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-2xl font-black font-mono tracking-wider text-blue-300">BFSI</span>
+            <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-blue-800 text-blue-200 border border-blue-700">Target Sector</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Banking, Financial Services & Insurance</h3>
+          <p class="text-blue-100 text-sm leading-relaxed">
+            Tailored specifically to high-throughput financial message protocols (ISO 8583, SWIFT, core banking APIs) where false positives cause lost customer transactions and downtime costs millions.
+          </p>
+        </div>
+
+        <!-- AI/ML Pillar -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-xl relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-sky-400/20 rounded-full blur-2xl"></div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-2xl font-black font-mono tracking-wider text-blue-200">AI / ML</span>
+            <span class="px-2.5 py-1 rounded-md text-[11px] font-mono bg-blue-600 text-white border border-blue-500">Core Engine</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Trained Network-Traffic Model Pipeline</h3>
+          <p class="text-blue-100 text-sm leading-relaxed">
+            Combines deep autoencoders for zero-day anomaly discovery with optimized gradient boosting (XGBoost/Random Forest) for sub-10ms attack classification and false-positive minimization.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Key Performance Metrics Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
+        
+        <div class="white-card p-6 text-center border-slate-200">
+          <div class="text-3xl sm:text-4xl font-black text-blue-700 font-mono">99.4%</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-800 mt-1">Detection Accuracy</div>
+          <div class="text-[11px] text-slate-500 mt-1">Benchmarked against CICIDS & BFSI datasets</div>
+        </div>
+
+        <div class="white-card p-6 text-center border-slate-200">
+          <div class="text-3xl sm:text-4xl font-black text-blue-700 font-mono">&lt; 8 ms</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-800 mt-1">Inference Latency</div>
+          <div class="text-[11px] text-slate-500 mt-1">Zero-delay wire speed packet inspection</div>
+        </div>
+
+        <div class="white-card p-6 text-center border-slate-200">
+          <div class="text-3xl sm:text-4xl font-black text-emerald-600 font-mono">0.03%</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-800 mt-1">False Positive Rate</div>
+          <div class="text-[11px] text-slate-500 mt-1">Prevents drops of legitimate customer transactions</div>
+        </div>
+
+        <div class="white-card p-6 text-center border-slate-200">
+          <div class="text-3xl sm:text-4xl font-black text-blue-700 font-mono">25,000+</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-800 mt-1">Packets / Second</div>
+          <div class="text-[11px] text-slate-500 mt-1">Sustained multi-threaded throughput</div>
+        </div>
+
+      </div>
+
+      <!-- Architecture Pipeline Diagram -->
+      <div class="white-card p-8 border-slate-200 bg-slate-50/40">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="git-merge" class="w-5 h-5 text-blue-600"></i>
+            End-to-End Detection & Mitigation Pipeline Architecture
+          </h3>
+          <span class="text-xs font-mono text-slate-500">Real-Time Flow: Tap &rarr; Mitigate</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="p-4 rounded-xl bg-white border border-slate-200 relative">
+            <div class="text-xs font-mono font-bold text-blue-600 mb-1">01. INGESTION</div>
+            <div class="font-bold text-slate-900 text-sm mb-2">Network Packet Tap</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Captures raw PCAP & IP flow streams from edge load balancers, core banking gateways, and internal subnets.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-slate-200 relative">
+            <div class="text-xs font-mono font-bold text-blue-600 mb-1">02. EXTRACTION</div>
+            <div class="font-bold text-slate-900 text-sm mb-2">Flow Feature Engine</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Extracts 48 flow indicators: packet length variance, TCP flag ratios, inter-arrival time, and protocol entropy.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-slate-200 relative">
+            <div class="text-xs font-mono font-bold text-blue-600 mb-1">03. INFERENCE</div>
+            <div class="font-bold text-slate-900 text-sm mb-2">Hybrid AI Classifier</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Autoencoders detect zero-day deviations; XGBoost attributes known attacks (DDoS, SQLi, Credential Stuffing).
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-blue-300 bg-blue-50/40 relative">
+            <div class="text-xs font-mono font-bold text-blue-700 mb-1">04. MITIGATION</div>
+            <div class="font-bold text-slate-900 text-sm mb-2">Automated Policy Rule</div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Immediately triggers dynamic firewall IP blackholing, session token revocation, and SOC high-priority alert.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Live AI Cyber Attack Detection Simulator -->
+  <section id="simulator" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-mono font-bold uppercase mb-3">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+          INTERACTIVE RESEARCH DEMO
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Live Banking Network Attack Detection Simulator
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg mt-3">
+          Select an attack scenario below to simulate real-time traffic entering the Core Banking perimeter. Watch the trained AI pipeline classify threats and execute countermeasures.
+        </p>
+      </div>
+
+      <!-- Simulator Dashboard Container -->
+      <div class="white-card border-slate-300 overflow-hidden shadow-2xl">
+        
+        <!-- Dashboard Top Control Header -->
+        <div class="p-4 sm:p-6 bg-slate-900 text-white flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+            <div>
+              <div class="font-bold text-sm sm:text-base flex items-center gap-2">
+                <span>BFSI-SOC Real-Time Telemetry Node</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700">v2.4-prod</span>
+              </div>
+              <div class="text-xs text-slate-400 font-mono">Monitoring Gateway: core-bank-gw01.net.internal</div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Pill Bar -->
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+              <span class="text-slate-400">Total Packets:</span>
+              <span id="stat-total-packets" class="font-bold text-white ml-1">142,080</span>
+            </div>
+            <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+              <span class="text-slate-400">Threats Blocked:</span>
+              <span id="stat-threats-blocked" class="font-bold text-red-400 ml-1">1,842</span>
+            </div>
+            <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+              <span class="text-slate-400">Normal Passed:</span>
+              <span id="stat-normal-traffic" class="font-bold text-emerald-400 ml-1">140,238</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario Selector Buttons Bar -->
+        <div class="p-4 bg-slate-100 border-b border-slate-200">
+          <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5 font-mono">
+            SELECT SIMULATION SCENARIO:
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+            
+            <button data-scenario="normal" class="scenario-btn ring-2 ring-blue-600 bg-blue-50 border-blue-600 p-2.5 rounded-xl border text-left transition-all hover:bg-white flex flex-col justify-between">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>Normal Banking</span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-1">UPI & NEFT flows</span>
+            </button>
+
+            <button data-scenario="ddos" class="scenario-btn p-2.5 rounded-xl border border-slate-300 text-left transition-all hover:bg-white flex flex-col justify-between">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                <span>SYN Flood DDoS</span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-1">Volumetric gateway hit</span>
+            </button>
+
+            <button data-scenario="sqli" class="scenario-btn p-2.5 rounded-xl border border-slate-300 text-left transition-all hover:bg-white flex flex-col justify-between">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span>SQL Injection</span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-1">Account API probe</span>
+            </button>
+
+            <button data-scenario="stuffing" class="scenario-btn p-2.5 rounded-xl border border-slate-300 text-left transition-all hover:bg-white flex flex-col justify-between">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                <span>Credential Stuffing</span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-1">Auth gateway brute</span>
+            </button>
+
+            <button data-scenario="lateral" class="scenario-btn p-2.5 rounded-xl border border-slate-300 text-left transition-all hover:bg-white flex flex-col justify-between">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span>Lateral Recon</span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-1">SWIFT subnet sweep</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Simulator Core Body (Telemetry Stream & Gauges) -->
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white">
+          
+          <!-- Left: Live Packet Stream Table (7 Cols) -->
+          <div class="lg:col-span-8 flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-blue-600"></i>
+                <span class="font-bold text-sm text-slate-900">Live Ingested Packet Telemetry</span>
+                <span id="current-scenario-badge"></span>
+              </div>
+
+              <!-- Stream Controls -->
+              <div class="flex items-center gap-2">
+                <button id="btn-stream-toggle" class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center gap-1">
+                  <i data-lucide="pause" class="w-3.5 h-3.5"></i> Pause
+                </button>
+                <button id="btn-stream-clear" class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center gap-1">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear
+                </button>
+                <button id="btn-audio-toggle" class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center gap-1">
+                  <i data-lucide="volume-x" class="w-3.5 h-3.5"></i> Audio Off
+                </button>
+              </div>
+            </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="border border-slate-200 rounded-xl overflow-x-auto custom-scrollbar flex-1 min-h-[320px] bg-slate-50/30">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-100 text-slate-600 text-[11px] font-mono uppercase tracking-wider border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th class="py-2.5 px-3">Timestamp</th>
+                    <th class="py-2.5 px-3">Source IP</th>
+                    <th class="py-2.5 px-3">Destination</th>
+                    <th class="py-2.5 px-3">Protocol</th>
+                    <th class="py-2.5 px-3 text-right">Length</th>
+                    <th class="py-2.5 px-3 text-right">Latency</th>
+                    <th class="py-2.5 px-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="packet-stream-log" class="divide-y divide-slate-100 font-mono text-xs">
+                  <!-- Generated live by simulator.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: AI Confidence & Mitigation Feed (4 Cols) -->
+          <div class="lg:col-span-4 flex flex-col gap-4">
+            
+            <!-- Gauge Box -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-xs font-bold font-mono uppercase tracking-wider text-slate-600 mb-3 flex items-center justify-between">
+                <span>AI INFERENCE METRICS</span>
+                <i data-lucide="cpu" class="w-4 h-4 text-blue-600"></i>
+              </div>
+
+              <!-- Anomaly Score -->
+              <div class="mb-4">
+                <div class="flex justify-between items-center text-xs font-semibold mb-1">
+                  <span class="text-slate-700">Anomaly Index:</span>
+                  <span id="gauge-anomaly-score" class="font-mono font-bold text-slate-900">4%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div id="gauge-anomaly-bar" class="h-2.5 rounded-full bg-emerald-500 transition-all duration-500" style="width: 4%"></div>
+                </div>
+              </div>
+
+              <!-- AI Confidence Score -->
+              <div>
+                <div class="flex justify-between items-center text-xs font-semibold mb-1">
+                  <span class="text-slate-700">Model Confidence:</span>
+                  <span id="gauge-confidence-val" class="font-mono font-bold text-blue-700">99.8%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div id="gauge-confidence-bar" class="h-2.5 rounded-full bg-blue-600 transition-all duration-500" style="width: 99.8%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mitigation Event Log Feed -->
+            <div class="flex-1 flex flex-col p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-xs font-bold font-mono uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-600"></i>
+                  <span>Automated Mitigation Log</span>
+                </div>
+                <span class="text-[10px] font-mono text-slate-400">Auto-Enforce: Active</span>
+              </div>
+
+              <div id="mitigation-event-log" class="space-y-2 overflow-y-auto max-h-[250px] custom-scrollbar">
+                <!-- Log entries added dynamically by simulator.js -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Technical Stack & Methodology -->
+  <section class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="text-xs font-bold font-mono tracking-widest text-blue-700 uppercase">METHODOLOGY & TOOLS</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">
+          Technical Stack & Engineering Tools
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg mt-3">
+          Constructed with industry-standard machine learning libraries, packet inspection toolchains, and banking compliance protocols.
+        </p>
+      </div>
+
+      <!-- Container rendered dynamically by app.js -->
+      <div id="tech-stack-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Rendered by app.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact & Get In Touch Section -->
+  <section id="contact" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Left: Contact Details -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-mono font-bold uppercase">
+            GET IN TOUCH
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Let's discuss cybersecurity research or opportunities.
+          </h2>
+          <p class="text-slate-600 text-base leading-relaxed">
+            Whether you represent a financial institution, cybersecurity research lab, tech organization, or academic faculty, I welcome discussions regarding BFSI security, machine learning pipelines, or graduate roles.
+          </p>
+
+          <div class="space-y-4 pt-2">
+            
+            <!-- Email Box -->
+            <div class="p-4 rounded-xl bg-white border border-slate-200 flex items-center justify-between shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+                  <i data-lucide="mail" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-slate-500 font-medium">Direct Email</div>
+                  <a href="mailto:divignesh.tech@gmail.com" class="text-sm font-bold text-slate-900 hover:text-blue-700 transition-colors">
+                    divignesh.tech@gmail.com
+                  </a>
+                </div>
+              </div>
+              <button class="btn-copy-email p-2 rounded-lg text-slate-500 hover:text-blue-700 hover:bg-slate-100 transition-colors" title="Copy email address">
+                <i data-lucide="copy" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- College Box -->
+            <div class="p-4 rounded-xl bg-white border border-slate-200 flex items-center gap-3 shadow-sm">
+              <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                <i data-lucide="landmark" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-500 font-medium">Department & Institution</div>
+                <div class="text-sm font-bold text-slate-900">
+                  Dept of CSE, Kamaraj College of Engineering & Technology
+                </div>
+                <div class="text-xs text-slate-500">Virudhunagar, Tamil Nadu — Class of 2026</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="pt-2 flex items-center gap-3">
+            <button class="btn-copy-email inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 transition-all shadow-md shadow-blue-200">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              Copy divignesh.tech@gmail.com
+            </button>
+            <a href="mailto:divignesh.tech@gmail.com" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition-all">
+              <i data-lucide="external-link" class="w-4 h-4 text-blue-600"></i>
+              Open Mail Client
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Inquiry Form -->
+        <div class="lg:col-span-7">
+          <div class="white-card p-8 border-slate-300 bg-white shadow-xl">
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Send a Message</h3>
+            <p class="text-xs text-slate-500 mb-6">
+              Fill in your query or project details below. Your message will be formatted and routed directly to my inbox.
+            </p>
+
+            <form id="contact-form" class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="contact-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Your Name *</label>
+                  <input 
+                    type="text" 
+                    id="contact-name" 
+                    required 
+                    placeholder="e.g. Dr. Ramesh / Sarah Jenkins" 
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-slate-50/50"
+                  />
+                </div>
+                <div>
+                  <label for="contact-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Your Email *</label>
+                  <input 
+                    type="email" 
+                    id="contact-email" 
+                    required 
+                    placeholder="e.g. name@organization.com" 
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-slate-50/50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="contact-subject" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Subject</label>
+                <select 
+                  id="contact-subject" 
+                  class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-slate-50/50 text-slate-700 font-medium"
+                >
+                  <option value="Final Year Project Review / Feedback">Final Year Project Review / Feedback</option>
+                  <option value="Research Collaboration Opportunity">Research Collaboration Opportunity</option>
+                  <option value="Engineering & Cybersecurity Role Inquiry">Engineering & Cybersecurity Role Inquiry</option>
+                  <option value="BFSI Security Consultation">BFSI Security Consultation</option>
+                  <option value="General Academic Inquiry">General Academic Inquiry</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="contact-message" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Message *</label>
+                <textarea 
+                  id="contact-message" 
+                  rows="4" 
+                  required 
+                  placeholder="Share details about your question, project, or role..." 
+                  class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all bg-slate-50/50"
+                ></textarea>
+              </div>
+
+              <button 
+                type="submit" 
+                class="w-full py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-blue-700 hover:bg-blue-800 transition-all shadow-md shadow-blue-200 flex items-center justify-center gap-2 hover:-translate-y-0.5"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                Send Message via divignesh.tech@gmail.com
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-10 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <!-- Left Footer Info -->
+        <div class="text-center md:text-left">
+          <div class="font-bold text-slate-900 text-base">
+            © 2026 Vigneshkumar. CSE, Kamaraj College of Engineering & Technology.
+          </div>
+          <p class="text-xs text-slate-500 mt-1">
+            B.E. Computer Science & Engineering · Applied Cybersecurity & Machine Learning for BFSI.
+          </p>
+        </div>
+
+        <!-- Contact Email Pill -->
+        <div class="flex items-center gap-4">
+          <a href="mailto:divignesh.tech@gmail.com" class="text-sm font-semibold text-blue-700 hover:text-blue-900 transition-colors flex items-center gap-1.5">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            divignesh.tech@gmail.com
+          </a>
+          <a href="#overview" class="p-2 rounded-lg text-slate-500 hover:text-blue-700 hover:bg-slate-100 transition-colors" title="Back to top">
+            <i data-lucide="arrow-up" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Scripts -->
+  <script src="data.js"></script>
+  <script src="simulator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
