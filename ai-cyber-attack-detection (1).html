@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Based Cyber Attack Detection System for Banking Networks</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg-void:#070b12;
+    --bg-panel:#0d131d;
+    --bg-panel-raised:#121a26;
+    --line:#1e2a3a;
+    --line-bright:#2c3e54;
+    --text-primary:#e7edf5;
+    --text-secondary:#8e9dae;
+    --text-tertiary:#5c6b7d;
+    --amber:#e3a545;
+    --amber-dim:#7a5c2c;
+    --danger:#d9694f;
+    --safe:#4fa385;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg-void);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(227,165,69,0.07), transparent),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,163,133,0.05), transparent);
+    color:var(--text-primary);
+    font-family:'Space Grotesk', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px;}
+  .wrap-wide{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .wrap-wide .prose{max-width:66ch;}
+
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  a{color:var(--amber);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  ::selection{background:rgba(227,165,69,0.25);}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--line);
+    padding:18px 0;
+    position:sticky;top:0;
+    background:rgba(7,11,18,0.86);
+    backdrop-filter:blur(10px);
+    z-index:10;
+  }
+  .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-secondary);}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--safe);box-shadow:0 0 8px var(--safe);}
+  .topbar nav{display:flex;gap:22px;font-size:14px;color:var(--text-secondary);}
+  .topbar nav a{color:var(--text-secondary);}
+  .topbar nav a:hover{color:var(--text-primary);text-decoration:none;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:76px 0 56px;border-bottom:1px solid var(--line);}
+  .hero .field{font-size:13px;color:var(--amber);font-family:'IBM Plex Mono',monospace;margin-bottom:18px;}
+  h1{
+    font-size:clamp(32px,5vw,50px);
+    font-weight:600;
+    line-height:1.12;
+    letter-spacing:-0.01em;
+    max-width:16ch;
+  }
+  .hero p.lede{
+    margin-top:20px;
+    font-size:17px;
+    color:var(--text-secondary);
+    max-width:60ch;
+  }
+
+  .stat-strip{
+    margin-top:44px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .stat{
+    padding:20px 22px;
+    border-right:1px solid var(--line);
+    background:var(--bg-panel);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:26px;
+    font-weight:500;
+    color:var(--text-primary);
+  }
+  .stat .num span{color:var(--amber);}
+  .stat .lbl{margin-top:6px;font-size:12.5px;color:var(--text-tertiary);}
+  .stat-strip-note{margin-top:10px;font-size:12px;color:var(--text-tertiary);}
+
+  /* ---------- section shell ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;}
+  .section-head .index{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--amber-dim);}
+  .section-head h2{font-size:22px;font-weight:600;}
+
+  .prose{color:var(--text-secondary);font-size:15.5px;max-width:66ch;}
+  .prose + .prose{margin-top:14px;}
+
+  /* ---------- objectives ---------- */
+  .obj-list{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:20px;}
+  .obj-row{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    gap:18px;
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .obj-row .n{font-family:'IBM Plex Mono',monospace;color:var(--amber-dim);font-size:14px;padding-top:2px;}
+  .obj-row .t{font-size:15px;color:var(--text-primary);}
+  .obj-row .d{margin-top:4px;font-size:14px;color:var(--text-secondary);}
+
+  /* ---------- architecture diagram ---------- */
+  .diagram-shell{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:26px 18px 20px;
+  }
+  .diagram-shell svg{width:100%;height:auto;display:block;}
+  .diagram-caption{margin-top:14px;font-size:13px;color:var(--text-tertiary);text-align:center;}
+
+  .stage-legend{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .stage-item{background:var(--bg-panel);padding:18px 16px;}
+  .stage-item .si-n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber-dim);}
+  .stage-item .si-t{margin-top:8px;font-size:14px;font-weight:600;color:var(--text-primary);}
+  .stage-item .si-d{margin-top:6px;font-size:13px;color:var(--text-secondary);line-height:1.5;}
+  @media (max-width:900px){
+    .stage-legend{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .stage-legend{grid-template-columns:1fr;}
+  }
+
+  /* ---------- tech stack ---------- */
+  .stack-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:20px;
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .stack-cell{background:var(--bg-panel);padding:18px 20px;}
+  .stack-cell .cat{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-tertiary);}
+  .stack-cell .items{margin-top:8px;font-size:14.5px;color:var(--text-primary);}
+
+  /* ---------- outcomes ---------- */
+  .outcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+  .outcome-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px;
+    background:var(--bg-panel);
+  }
+  .outcome-card .tag{font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--safe);}
+  .outcome-card p{margin-top:8px;font-size:14.5px;color:var(--text-secondary);}
+
+  /* ---------- institution ---------- */
+  .inst-card{
+    border:1px solid var(--line-bright);
+    border-radius:12px;
+    padding:28px;
+    background:linear-gradient(180deg, var(--bg-panel-raised), var(--bg-panel));
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:28px;
+  }
+  .inst-card h3{font-size:18px;font-weight:600;max-width:22ch;}
+  .inst-card .addr{margin-top:10px;font-size:14px;color:var(--text-secondary);line-height:1.6;}
+  .kv{display:flex;flex-direction:column;gap:12px;}
+  .kv-row{display:flex;flex-direction:column;border-bottom:1px solid var(--line);padding-bottom:10px;}
+  .kv-row:last-child{border-bottom:none;padding-bottom:0;}
+  .kv-row .k{font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--text-tertiary);}
+  .kv-row .v{margin-top:3px;font-size:14.5px;color:var(--text-primary);}
+
+  /* ---------- footer ---------- */
+  footer{padding:36px 0 50px;}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+  footer .who{font-size:13.5px;color:var(--text-secondary);}
+  footer .who strong{color:var(--text-primary);font-weight:600;}
+  footer .meta{font-size:12.5px;color:var(--text-tertiary);font-family:'IBM Plex Mono',monospace;}
+
+  @media (max-width:720px){
+    .stat-strip{grid-template-columns:1fr;}
+    .stat{border-right:none;border-bottom:1px solid var(--line);}
+    .stat:last-child{border-bottom:none;}
+    .outcome-grid{grid-template-columns:1fr;}
+    .inst-card{grid-template-columns:1fr;}
+    .topbar nav{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+
+  /* single orchestrated entrance for the hero stats */
+  .stat .num{opacity:0;transform:translateY(6px);animation:rise 0.6s ease forwards;}
+  .stat:nth-child(1) .num{animation-delay:0.05s;}
+  .stat:nth-child(2) .num{animation-delay:0.18s;}
+  .stat:nth-child(3) .num{animation-delay:0.31s;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand"><span class="dot"></span> BFSI Threat Detection · Academic Project</div>
+      <nav>
+        <a href="#architecture">Architecture</a>
+        <a href="#stack">Stack</a>
+        <a href="#institution">Institution</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="wrap">
+      <div class="field mono">CSE · II Year · Project Proposal</div>
+      <h1>AI-Based Cyber Attack Detection System for Banking Networks</h1>
+      <p class="lede">A machine learning pipeline that watches banking network traffic in real time, separates normal activity from intrusion attempts, and hands analysts a ranked alert — before a threat reaches an account.</p>
+
+      <div class="stat-strip">
+        <div class="stat">
+          <div class="num">&lt;<span>2s</span></div>
+          <div class="lbl">target detection latency per flow</div>
+        </div>
+        <div class="stat">
+          <div class="num"><span>5</span> classes</div>
+          <div class="lbl">DDoS, phishing, malware, intrusion, normal</div>
+        </div>
+        <div class="stat">
+          <div class="num"><span>95</span>%+</div>
+          <div class="lbl">target detection accuracy on test traffic</div>
+        </div>
+      </div>
+      <div class="stat-strip-note">Figures are project targets set for evaluation, not measurements from a deployed system.</div>
+    </div>
+  </div>
+
+  <section id="problem">
+    <div class="wrap">
+      <div class="section-head"><span class="index mono">01</span><h2>Why banking networks need this</h2></div>
+      <p class="prose">Banking infrastructure is a constant target: DDoS floods aimed at online banking portals, phishing-driven credential theft, malware moving laterally through branch networks, and intrusion attempts probing core banking APIs. Rule-based firewalls and signature systems catch known patterns but miss novel or slowly-evolving attacks.</p>
+      <p class="prose">This project applies supervised and anomaly-based machine learning to network flow data, so the system can flag suspicious behaviour it has never seen labelled before — and route it to a security analyst with context, not just a raw alert.</p>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="wrap-wide">
+      <div class="section-head"><span class="index mono">02</span><h2>System architecture</h2></div>
+      <p class="prose" style="margin-bottom:22px;">Traffic is captured at the network edge, reduced to statistical features, scored by the detection engine, then routed by outcome — silent for normal traffic, escalated for anything else.</p>
+
+      <div class="diagram-shell">
+        <svg viewBox="0 0 860 460" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5c6b7d"/>
+            </marker>
+            <marker id="arrow-amber" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#e3a545"/>
+            </marker>
+          </defs>
+
+          <!-- font -->
+          <style>
+            .lbl-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:#e7edf5;font-weight:600;}
+            .lbl-sub{font-family:'IBM Plex Mono',monospace;font-size:10.5px;fill:#8e9dae;}
+            .lbl-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;fill:#5c6b7d;}
+          </style>
+
+          <!-- Stage 1: Banking network -->
+          <rect x="20" y="40" width="160" height="90" rx="8" fill="#0d131d" stroke="#1e2a3a"/>
+          <text x="40" y="70" class="lbl-tag">SOURCE</text>
+          <text x="40" y="90" class="lbl-title">Banking Network</text>
+          <text x="40" y="108" class="lbl-sub">ATMs · Core · Mobile app</text>
+
+          <!-- Stage 1b: Traffic capture -->
+          <rect x="20" y="330" width="160" height="90" rx="8" fill="#0d131d" stroke="#1e2a3a"/>
+          <text x="40" y="360" class="lbl-tag">CAPTURE</text>
+          <text x="40" y="380" class="lbl-title">Traffic Sensor</text>
+          <text x="40" y="398" class="lbl-sub">NetFlow / packet mirror</text>
+
+          <path d="M100,130 L100,330" stroke="#5c6b7d" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+          <!-- Stage 2: Feature extraction -->
+          <rect x="240" y="330" width="170" height="90" rx="8" fill="#0d131d" stroke="#1e2a3a"/>
+          <text x="260" y="360" class="lbl-tag">PREPROCESS</text>
+          <text x="260" y="380" class="lbl-title">Feature Extraction</text>
+          <text x="260" y="398" class="lbl-sub">Flow stats · normalization</text>
+
+          <path d="M180,375 L240,375" stroke="#5c6b7d" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+          <!-- Stage 3: Detection engine (hero box) -->
+          <rect x="240" y="150" width="380" height="130" rx="10" fill="#121a26" stroke="#e3a545" stroke-width="1.4"/>
+          <text x="262" y="180" class="lbl-tag" fill="#e3a545">DETECTION ENGINE</text>
+          <text x="262" y="202" class="lbl-title">AI / ML Classifier</text>
+          <text x="262" y="220" class="lbl-sub">Random Forest · LSTM · CNN ensemble</text>
+
+          <!-- mini model chips -->
+          <rect x="262" y="234" width="96" height="28" rx="6" fill="#0d131d" stroke="#2c3e54"/>
+          <text x="277" y="252" class="lbl-sub" fill="#e7edf5">Random Forest</text>
+          <rect x="368" y="234" width="70" height="28" rx="6" fill="#0d131d" stroke="#2c3e54"/>
+          <text x="383" y="252" class="lbl-sub" fill="#e7edf5">LSTM</text>
+          <rect x="448" y="234" width="66" height="28" rx="6" fill="#0d131d" stroke="#2c3e54"/>
+          <text x="462" y="252" class="lbl-sub" fill="#e7edf5">CNN</text>
+
+          <path d="M325,330 L325,280" stroke="#5c6b7d" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+          <!-- Stage 4: Classification outputs -->
+          <text x="662" y="172" class="lbl-tag">CLASSIFICATION</text>
+
+          <rect x="662" y="150" width="178" height="30" rx="6" fill="#0d131d" stroke="#4fa385"/>
+          <text x="678" y="170" class="lbl-sub" fill="#4fa385">Normal traffic</text>
+
+          <rect x="662" y="188" width="178" height="30" rx="6" fill="#0d131d" stroke="#d9694f"/>
+          <text x="678" y="208" class="lbl-sub" fill="#d9694f">DDoS</text>
+
+          <rect x="662" y="226" width="178" height="30" rx="6" fill="#0d131d" stroke="#d9694f"/>
+          <text x="678" y="246" class="lbl-sub" fill="#d9694f">Phishing / credential theft</text>
+
+          <rect x="662" y="264" width="178" height="30" rx="6" fill="#0d131d" stroke="#d9694f"/>
+          <text x="678" y="284" class="lbl-sub" fill="#d9694f">Malware / intrusion</text>
+
+          <path d="M620,180 L662,165" stroke="#e3a545" stroke-width="1.3" fill="none" marker-end="url(#arrow-amber)"/>
+          <path d="M620,210 L662,203" stroke="#e3a545" stroke-width="1.3" fill="none" marker-end="url(#arrow-amber)"/>
+          <path d="M620,240 L662,241" stroke="#e3a545" stroke-width="1.3" fill="none" marker-end="url(#arrow-amber)"/>
+          <path d="M620,265 L662,279" stroke="#e3a545" stroke-width="1.3" fill="none" marker-end="url(#arrow-amber)"/>
+
+          <!-- Stage 5: Response -->
+          <rect x="662" y="330" width="178" height="90" rx="8" fill="#0d131d" stroke="#1e2a3a"/>
+          <text x="682" y="360" class="lbl-tag">RESPONSE</text>
+          <text x="682" y="380" class="lbl-title">SOC Dashboard</text>
+          <text x="682" y="398" class="lbl-sub">Alert · auto-block · log</text>
+
+          <path d="M751,294 L751,330" stroke="#5c6b7d" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+          <path d="M751,180 C 810,240 810,290 751,330" stroke="#4fa385" stroke-width="1.3" fill="none" stroke-dasharray="3 4"/>
+
+        </svg>
+      </div>
+      <div class="diagram-caption">Solid arrows: mandatory pipeline flow. Dashed line: normal traffic path logged without alerting.</div>
+
+      <div class="stage-legend">
+        <div class="stage-item">
+          <div class="si-n">01 · CAPTURE</div>
+          <div class="si-t">Traffic sensor</div>
+          <div class="si-d">Mirrors traffic from ATMs, core banking servers, and the mobile app as NetFlow records.</div>
+        </div>
+        <div class="stage-item">
+          <div class="si-n">02 · PREPROCESS</div>
+          <div class="si-t">Feature extraction</div>
+          <div class="si-d">Reduces raw flows to normalized statistical features the model can score.</div>
+        </div>
+        <div class="stage-item">
+          <div class="si-n">03 · DETECT</div>
+          <div class="si-t">AI/ML classifier</div>
+          <div class="si-d">An ensemble of Random Forest, LSTM, and CNN models scores each flow in under 2 seconds.</div>
+        </div>
+        <div class="stage-item">
+          <div class="si-n">04 · CLASSIFY</div>
+          <div class="si-t">Threat category</div>
+          <div class="si-d">Sorts each flow into normal traffic, DDoS, phishing, or malware/intrusion.</div>
+        </div>
+        <div class="stage-item">
+          <div class="si-n">05 · RESPOND</div>
+          <div class="si-t">SOC dashboard</div>
+          <div class="si-d">Anything but normal traffic reaches the analyst as a ranked, actionable alert.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="wrap">
+      <div class="section-head"><span class="index mono">03</span><h2>Technology stack</h2></div>
+      <div class="stack-grid">
+        <div class="stack-cell">
+          <div class="cat">LANGUAGE / CORE</div>
+          <div class="items">Python</div>
+        </div>
+        <div class="stack-cell">
+          <div class="cat">ML / DL</div>
+          <div class="items">Scikit-learn, TensorFlow / Keras</div>
+        </div>
+        <div class="stack-cell">
+          <div class="cat">DATA HANDLING</div>
+          <div class="items">Pandas, NumPy</div>
+        </div>
+        <div class="stack-cell">
+          <div class="cat">TRAFFIC CAPTURE</div>
+          <div class="items">Wireshark, NetFlow / CICFlowMeter</div>
+        </div>
+        <div class="stack-cell">
+          <div class="cat">DASHBOARD</div>
+          <div class="items">Flask, Chart.js</div>
+        </div>
+        <div class="stack-cell">
+          <div class="cat">DATASET</div>
+          <div class="items">CICIDS2017, NSL-KDD</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="outcomes">
+    <div class="wrap">
+      <div class="section-head"><span class="index mono">04</span><h2>Expected outcomes</h2></div>
+      <div class="outcome-grid">
+        <div class="outcome-card">
+          <div class="tag mono">FOR THE BANK</div>
+          <p>Earlier visibility into DDoS, phishing, and intrusion attempts against core banking channels, with fewer false alarms reaching analysts.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="tag mono">FOR THE ANALYST</div>
+          <p>A single dashboard that ranks alerts by severity instead of a raw stream of logs to sift through manually.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="tag mono">TECHNICAL</div>
+          <p>A trained, benchmarked model comparison (Random Forest vs LSTM vs CNN) on banking-representative traffic classes.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="tag mono">ACADEMIC</div>
+          <p>A reproducible pipeline and report suitable for extension into a final-year capstone project.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="institution">
+    <div class="wrap">
+      <div class="section-head"><span class="index mono">05</span><h2>Institution</h2></div>
+      <div class="inst-card">
+        <div>
+          <h3>Kamaraj College of Engineering and Technology (Autonomous)</h3>
+          <div class="addr">
+            S.P.G. Chidambara Nadar – C.Nagammal Campus,<br>
+            S.P.G.C. Nagar, K. Vellakulam – 625 701<br>
+            Virudhunagar, Tamil Nadu
+          </div>
+          <div class="addr">
+            <a href="https://www.kamarajengg.edu.in/" target="_blank" rel="noopener">kamarajengg.edu.in ↗</a>
+          </div>
+        </div>
+        <div class="kv">
+          <div class="kv-row"><div class="k mono">DEGREE</div><div class="v">Bachelor of Engineering</div></div>
+          <div class="kv-row"><div class="k mono">BRANCH</div><div class="v">Computer Science &amp; Engineering</div></div>
+          <div class="kv-row"><div class="k mono">YEAR</div><div class="v">II Year</div></div>
+          <div class="kv-row"><div class="k mono">AREA</div><div class="v">Cybersecurity · AI/ML · Network Security (BFSI)</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="who">Prepared by <strong>Vigeshkumar</strong> · B.E. Computer Science &amp; Engineering</div>
+      <div class="meta">Kamaraj College of Engineering &amp; Technology</div>
+    </div>
+  </footer>
+
+</body>
+</html>
